@@ -21,5 +21,4 @@ git commit -m 'deploy'
 
 # 部署到 https://<USERNAME>.github.io/<REPO>
 git push -f git@github.com:Amhertx/demo.git master:gh-pages
-
-cd -
+.git master:gh-pages
