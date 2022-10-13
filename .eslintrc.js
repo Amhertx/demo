@@ -24,5 +24,9 @@ module.exports = {
     "no-irregular-whitespace": 0,
     "no-multi-spaces": 0,
     "no-multiple-empty-lines": 0,
+    "no-tabs": 0,
+    "no-mixed-spaces-and-tabs": 0,
+    "indent": ["off", "tab"],
+    "no-trailing-spaces": 0,
   },
 };

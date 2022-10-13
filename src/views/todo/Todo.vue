@@ -26,16 +26,20 @@ export default {
 .box {
   display: flex;
   padding: 20px;
+  border-radius: 10px;
   .left,
   .right {
-    border: 1px solid;
     height: 90vh;
   }
   .left {
-    width: 400px;
+    width: 350px;
+    background: #f4f4f4;
+    border-radius: 10px 0 0 10px;
   }
   .right {
-    width: 1000px;
+    flex: 1;
+    border-radius: 0 10px 10px 0 ;
+    background: #dfedf9;
   }
 }
 </style>
