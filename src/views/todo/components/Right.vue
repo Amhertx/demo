@@ -2,7 +2,10 @@
   <div class="box-right">
     <h2 class="title">我的一天</h2>
     <div class="time">{{ date }}</div>
-    <div>
+    <div class="body">
+      <div class="loading" v-if="!myTodoList.length && !oldList.length">
+        <i class="el-icon-sunny logo"></i>
+      </div>
       <ul class="todo-list">
         <li class="list-li" v-for="(item, index) in myTodoList" :key="index">
           <div class="li-div">
@@ -21,7 +24,6 @@
           </div>
         </li>
       </ul>
-      <!-- <hr v-show="myTodoList.length && oldList.length" /> -->
       <div class="hr" @click="showOldList = !showOldList" v-show="oldList.length">
         <i :class="showOldList ? 'el-icon-arrow-down' : 'el-icon-arrow-right'"></i>
         已完成
@@ -46,11 +48,11 @@
           </li>
         </ul>
       </transition>
-      <div class="ctodo">
-        <el-tooltip class="item" effect="dark" manual v-model="isTodo" content="还没输入任务呢！" placement="top">
-          <el-input v-model="form.content" placeholder="添加任务" @keydown.enter.native="addTodo"></el-input>
-        </el-tooltip>
-      </div>
+    </div>
+    <div class="ctodo">
+      <el-tooltip class="item" effect="dark" manual v-model="isTodo" content="还没输入任务呢！" placement="top">
+        <el-input maxlength="255" v-model="form.content" placeholder="添加任务" @keydown.enter.native="addTodo"></el-input>
+      </el-tooltip>
     </div>
   </div>
 </template>
@@ -136,7 +138,9 @@ export default {
 
 <style lang="scss" scoped>
 .box-right {
+  height: 80vh;
   padding: 50px;
+  position: relative;
   .title {
     color: #3063ab;
     font-size: 35px;
@@ -147,56 +151,99 @@ export default {
   .time {
     color: #3063ab;
     text-align: left;
+    margin-bottom: 20px;
   }
-  .hr {
-    cursor: pointer;
-    user-select: none;
-    background: #f5fafd;
-    color: #3063ab;
-    width: max-content;
-    padding: 5px;
-    margin-left: 20px;
-    border-radius: 10px;
-  }
-  .hr:hover {
-    background: #fff;
-  }
-  .todo-list {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    margin: 20px;
-    padding: 0;
-    list-style: none;
-    .list-li {
-      height: 50px;
-      line-height: 50px;
-      width: 100%;
+  .body {
+    height: 60vh;
+    overflow: auto;
+    .hr {
+      cursor: pointer;
+      user-select: none;
+      background: #f5fafd;
+      color: #3063ab;
+      width: max-content;
+      padding: 5px;
+      margin-left: 20px;
       border-radius: 10px;
-      text-align: left;
-      background: #f4f5f6;
-      margin-bottom: 5px;
-      .li-div {
-        padding: 0 20px;
-        display: flex;
-        align-items: center;
-        .content {
-          margin-left: 20px;
-          display: inline;
-          flex: 1;
+    }
+    .hr:hover {
+      background: #fff;
+    }
+    .todo-list {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      .list-li {
+        min-height: 50px;
+        line-height: 50px;
+        width: 100%;
+        border-radius: 10px;
+        text-align: left;
+        background: #f4f5f6;
+        margin-bottom: 5px;
+        .li-div {
+          padding: 0 20px;
+          display: flex;
+          align-items: center;
+          .content {
+            margin-left: 20px;
+            display: inline;
+            flex: 1;
+            word-break: break-all;
+            padding: 10px 20px 10px 0;
+            line-height: 25px;
+          }
+          .btn {
+            height: 30px;
+          }
         }
-        .btn {
-          height: 30px;
+      }
+      .list-li:hover {
+        background: #f6f6f6;
+      }
+    }
+    .loading {
+      height: 60vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      .logo {
+        font-size: 150px;
+        color: #f7b548;
+        animation: logo 10s infinite linear;
+      }
+      @keyframes logo {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
         }
       }
     }
-    .list-li:hover {
-      background: #f6f6f6;
-    }
+  }
+  // 滚动条
+  .body::-webkit-scrollbar {
+    /*滚动条整体样式*/
+    width: 10px; /*高宽分别对应横竖滚动条的尺寸*/
+    height: 1px;
+  }
+  .body::-webkit-scrollbar-thumb {
+    /*滚动条里面小方块*/
+    border-radius: 10px;
+    background: #e5e5e5;
+  }
+  .body::-webkit-scrollbar-track {
+    /*滚动条里面轨道*/
+    border-radius: 10px;
+    background: #ffffff;
   }
   .ctodo {
     position: absolute;
-    bottom: 100px;
+    bottom: 20px;
     width: 500px;
   }
 }

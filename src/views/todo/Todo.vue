@@ -30,6 +30,7 @@ export default {
   .left,
   .right {
     height: 90vh;
+    min-height: 500px;
   }
   .left {
     width: 350px;

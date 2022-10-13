@@ -31,9 +31,21 @@
       </div>
     </div>
     <hr />
-    <div class="free-list" v-for="(item, index) in userList" :key="index">
-      <i class="el-icon-s-order"></i>
-      <div>{{ item.label }}</div>
+    <div class="free-list">
+      <div class="free-list-row" v-for="(item, index) in userList" :key="index">
+        <i class="el-icon-s-order"></i>
+        <div class="content" v-show="!item.show">{{ item.label }}</div>
+        <el-input
+          class="content"
+          v-model="item.label"
+          ref="focus"
+          @focus="getAll"
+          @blur="setName(item)"
+          size="small"
+          @keydown.enter.native="subProject(item)"
+          v-show="item.show"
+        ></el-input>
+      </div>
     </div>
     <div class="add-bottom" @click="add()">
       <i class="el-icon-plus"></i>
@@ -59,7 +71,20 @@ export default {
   },
   methods: {
     add() {
-      this.userList.push({ label: "无标题列表", value: this.userList.length });
+      this.userList.push({ label: "无标题列表", value: this.userList.length, show: true });
+      this.$nextTick(() => {
+        this.$refs.focus[this.userList.length - 1].focus();
+      });
+    },
+    subProject(item) {
+      item.show = false;
+    },
+    getAll(event) {
+      event.currentTarget.select();
+    },
+    setName(item) {
+      item.show = false;
+      if (item.label.trim() == false) item.label = "无标题列表";
     },
   },
 };
@@ -68,6 +93,8 @@ export default {
 <style lang="scss" scoped>
 .box-left {
   padding: 20px;
+  position: relative;
+  height: 85vh;
   .top {
     .title {
       .info {
@@ -120,18 +147,41 @@ export default {
     }
   }
   .free-list {
-    display: flex;
-    padding: 10px;
-    align-items: center;
+    overflow: auto;
+    height: 40vh;
+    .free-list-row {
+      display: flex;
+      padding: 10px;
+      align-items: center;
+      .content {
+        margin-left: 10px;
+        font-size: 15px;
+      }
+    }
+    .free-list-row:hover {
+      background: #e9e9e9;
+    }
+  } // 滚动条
+  .free-list::-webkit-scrollbar {
+    /*滚动条整体样式*/
+    width: 10px; /*高宽分别对应横竖滚动条的尺寸*/
+    height: 1px;
   }
-  .free-list:hover {
-    background: #e9e9e9;
+  .free-list::-webkit-scrollbar-thumb {
+    /*滚动条里面小方块*/
+    border-radius: 10px;
+    background: #e5e5e5;
+  }
+  .free-list::-webkit-scrollbar-track {
+    /*滚动条里面轨道*/
+    border-radius: 10px;
+    background: #ffffff;
   }
   .add-bottom {
     cursor: pointer;
     user-select: none;
     position: absolute;
-    bottom: 100px;
+    bottom: 20px;
   }
 }
 </style>
