@@ -1,6 +1,9 @@
 <template>
   <div class="box-right">
-    <h2 class="title">我的一天</h2>
+    <h2 class="title">
+      <div>我的一天</div>
+      <div>{{ time }}</div>
+    </h2>
     <div class="time">{{ date }}</div>
     <div class="body">
       <div class="loading" v-if="!myTodoList.length && !oldList.length">
@@ -68,12 +71,24 @@ export default {
         content: "",
       },
       date: "",
+      time: "",
       checkList: [],
       isTodo: false,
     };
   },
   mounted() {
     const date = new Date();
+    let h = "";
+    let m = "";
+    let s = "";
+    setInterval(() => {
+      h = new Date().getHours();
+      m = new Date().getMinutes();
+      s = new Date().getSeconds();
+      m = String(m);
+      s = String(s);
+      this.time = h + ":" + (m.length < 2 ? "0" + m : m) + ":" + (s.length < 2 ? "0" + s : s);
+    }, 1000);
     this.date =
       date.getMonth() +
       1 +
@@ -147,6 +162,8 @@ export default {
     margin-top: 0;
     margin-bottom: 5px;
     text-align: left;
+    display: flex;
+    justify-content: space-between;
   }
   .time {
     color: #3063ab;
@@ -163,7 +180,8 @@ export default {
       color: #3063ab;
       width: max-content;
       padding: 5px;
-      margin-left: 20px;
+      // margin-left: 20px;
+      margin: 10px 0 15px;
       border-radius: 10px;
     }
     .hr:hover {
