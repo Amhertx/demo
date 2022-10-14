@@ -6,6 +6,7 @@
       invalid.You can contact thewebmaster to solve your problem faster, or return to the homepage of the website tobrowse other pages. The homepage address
       link of the website is: https://404.life
     </div>
+    <el-button class="btn" @click="$router.push({ path: '/' })">返回首页</el-button>
   </div>
 </template>
 
@@ -34,6 +35,17 @@ export default {};
     width: 800px;
     font-size: 20px;
     color: #fff;
+  }
+  .btn {
+    margin-top: 20px;
+    background: #f7971d;
+    border: #f7971d;
+    color: black;
+    font-size: 30px;
+    font-weight: bold;
+  }
+  .btn:hover {
+    background: #ffaf46;
   }
 }
 </style>
