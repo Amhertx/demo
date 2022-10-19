@@ -1,24 +1,6 @@
-# test
-
-## Project setup
-```
-npm install
-```
-
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+个人demo演示
+功能清单：
+1、购物车（完成）
+2、仿造微软todoList
+3、天气查询（完成）
+4、记账程序
