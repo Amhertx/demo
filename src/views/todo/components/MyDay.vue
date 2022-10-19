@@ -8,6 +8,8 @@
     <div class="body">
       <div class="loading" v-if="!myTodoList.length && !oldList.length">
         <i class="el-icon-sunny logo"></i>
+        <div class="loading-title">专注于你的一天</div>
+        <div class="loading-content">使用“我的一天”完成任务，这是一个每天都会刷新的列表。</div>
       </div>
       <ul class="todo-list">
         <li class="list-li" v-for="(item, index) in myTodoList" :key="index">
@@ -152,7 +154,6 @@ export default {
         this.oldList = [];
         this.setItem();
       }
-      console.log(this.myTodoList, this.oldList, a);
     },
     setItem() {
       let a = { myTodoList: this.myTodoList, oldList: this.oldList };
@@ -162,11 +163,6 @@ export default {
           starList.push(res);
         }
       });
-      // this.oldList.map((res) => {
-      //   if (res.star) {
-      //     starList.push(res);
-      //   }
-      // });
       window.localStorage.setItem("myDay", JSON.stringify(a));
       window.localStorage.setItem("important", JSON.stringify({ starList }));
       handle.$emit("update");
@@ -274,6 +270,7 @@ export default {
       display: flex;
       justify-content: center;
       align-items: center;
+      flex-direction: column;
       .logo {
         font-size: 150px;
         color: #f7b548;
@@ -286,6 +283,18 @@ export default {
         100% {
           transform: rotate(360deg);
         }
+      }
+      .loading-title {
+        margin-top: 10px;
+        font-weight: bold;
+        color: #3063ab;
+        font-size: 20px;
+      }
+      .loading-content {
+        margin-top: 10px;
+        font-size: 15px;
+        color: #4170b2;
+        width: 280px;
       }
     }
   }

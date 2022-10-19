@@ -11,6 +11,7 @@
     <div class="body">
       <div class="loading" v-if="!starList.length">
         <i class="el-icon-sunny logo"></i>
+        <div class="loading-content">尝试为一些任务添加星标，以便在此处查看它们。</div>
       </div>
       <ul class="todo-list">
         <li class="list-li" v-for="(item, index) in starList" :key="index">
@@ -108,7 +109,6 @@ export default {
       this.setItem();
     },
     star(item) {
-      console.log(item);
       this.myTodoList.map((res) => {
         if (res.id == item.id) {
           res.star = !res.star;
@@ -133,7 +133,6 @@ export default {
         this.starList = [];
         this.setItem();
       }
-      console.log("this.myTodoList :>> ", this.myTodoList);
     },
     setItem() {
       let a = { myTodoList: this.myTodoList, oldList: this.oldList };
@@ -180,7 +179,7 @@ export default {
   padding: 50px;
   position: relative;
   .title {
-    color: #3063ab;
+    color: #ac395d;
     font-size: 35px;
     margin-top: 0;
     margin-bottom: 5px;
@@ -189,7 +188,7 @@ export default {
     justify-content: space-between;
   }
   .time {
-    color: #3063ab;
+    color: #ac395d;
     text-align: left;
     margin-bottom: 20px;
   }
@@ -200,7 +199,7 @@ export default {
       cursor: pointer;
       user-select: none;
       background: #f5fafd;
-      color: #3063ab;
+      color: #ac395d;
       width: max-content;
       padding: 5px;
       // margin-left: 20px;
@@ -251,6 +250,7 @@ export default {
       display: flex;
       justify-content: center;
       align-items: center;
+      flex-direction: column;
       .logo {
         font-size: 150px;
         color: #f7b548;
@@ -263,6 +263,12 @@ export default {
         100% {
           transform: rotate(360deg);
         }
+      }
+      .loading-content {
+        font-size: 15px;
+        color: #ac395d;
+        margin-top: 10px;
+        width: 250px;
       }
     }
   }

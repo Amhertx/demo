@@ -6,11 +6,11 @@
           <div class="img">
             <img v-show="userInfo.img" src="" alt="" />
             <div v-show="!userInfo.img">
-              <h5 class="img">A</h5>
+              <h5 class="img">R</h5>
             </div>
           </div>
           <div class="content">
-            <h3 class="name">{{ "Amhertx" }}</h3>
+            <h3 class="name">{{ "Robot" }}</h3>
             <span class="account">
               <span>49******@qq.com</span>
               <i class="el-icon-d-caret"></i>
@@ -18,7 +18,7 @@
           </div>
         </div>
         <div class="search">
-          <el-input size="small" placeholder="搜索">
+          <el-input size="small" placeholder="搜索" v-model="searchValue" clearable @input="search" @focus="getAllList">
             <i slot="suffix" class="el-input__icon el-icon-search"></i>
           </el-input>
         </div>
@@ -67,8 +67,10 @@ export default {
         { label: "已分配给我", value: "4", icon: "el-icon-user", todoInfo: "" },
         { label: "任务", value: "5", icon: "el-icon-s-home", todoInfo: "" },
       ],
+      searchValue: "",
       userInfo: {},
       userList: [],
+      allList: [],
     };
   },
   mounted() {
@@ -78,6 +80,21 @@ export default {
     });
   },
   methods: {
+    search() {
+      let searchList = [];
+      this.allList.map((res) => {
+        if (res.content.indexOf(this.searchValue) != -1 && this.searchValue != "") {
+          searchList.push(res);
+        }
+      });
+      console.log(searchList);
+    },
+    getAllList() {
+      this.allList = [];
+      let myDay = JSON.parse(window.localStorage.getItem("myDay"));
+      myDay.myTodoList.map((res) => this.allList.push(res));
+      myDay.oldList.map((res) => this.allList.push(res));
+    },
     getTips() {
       this.list.map((res) => {
         const a = JSON.parse(window.localStorage.getItem(res.value));
@@ -150,6 +167,10 @@ export default {
       }
       .search {
         margin-top: 10px;
+        ::v-deep .el-input__suffix-inner {
+          display: flex;
+          flex-direction: row-reverse;
+        }
       }
     }
   }
