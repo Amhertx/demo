@@ -25,6 +25,7 @@ export default {
         { label: "shop", router: "/shop" },
         { label: "todoList", router: "/todo" },
         { label: "weather", router: "/weather" },
+        { label: "bill", router: "/bill" },
         { label: "...", router: "" },
       ],
     };

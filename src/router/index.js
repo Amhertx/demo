@@ -39,6 +39,11 @@ const routes = [
     component: () => import("../views/weather/index.vue"),
   },
   {
+    path: "/bill",
+    name: "bill",
+    component: () => import("../views/bill/index.vue"),
+  },
+  {
     path: "*",
     name: "404",
     component: () => import("../views/404.vue"),

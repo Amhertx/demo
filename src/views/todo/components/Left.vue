@@ -25,9 +25,10 @@
       </div>
     </div>
     <div class="list">
-      <div class="list-row" v-for="(item, index) in list" :key="index">
+      <div class="list-row" v-for="(item, index) in list" :key="index" @click="choosePage(item)">
         <div :class="item.icon"></div>
         <div class="list-row-content">{{ item.label }}</div>
+        <div class="tips" v-show="item.todoInfo">{{ item.todoInfo }}</div>
       </div>
     </div>
     <hr />
@@ -55,26 +56,49 @@
 </template>
 
 <script>
+import handle from "./handle";
 export default {
   data() {
     return {
       list: [
-        { label: "我的一天", value: "1", icon: "el-icon-sunny" },
-        { label: "重要", value: "2", icon: "el-icon-star-off" },
-        { label: "计划内", value: "3", icon: "el-icon-notebook-1" },
-        { label: "已分配给我", value: "4", icon: "el-icon-user" },
-        { label: "任务", value: "5", icon: "el-icon-s-home" },
+        { label: "我的一天", value: "myDay", icon: "el-icon-sunny", todoInfo: "" },
+        { label: "重要", value: "important", icon: "el-icon-star-off", todoInfo: "" },
+        { label: "计划内", value: "plan", icon: "el-icon-notebook-1", todoInfo: "" },
+        { label: "已分配给我", value: "4", icon: "el-icon-user", todoInfo: "" },
+        { label: "任务", value: "5", icon: "el-icon-s-home", todoInfo: "" },
       ],
       userInfo: {},
       userList: [],
     };
   },
+  mounted() {
+    this.getTips();
+    handle.$on("update", () => {
+      this.getTips();
+    });
+  },
   methods: {
+    getTips() {
+      this.list.map((res) => {
+        const a = JSON.parse(window.localStorage.getItem(res.value));
+        if (a) {
+          if (res.value == "myDay") {
+            res.todoInfo = a.myTodoList.length + a.oldList.length;
+          }
+          if (res.value == "important") {
+            res.todoInfo = a.starList.length;
+          }
+        }
+      });
+    },
     add() {
       this.userList.push({ label: "无标题列表", value: this.userList.length, show: true });
       this.$nextTick(() => {
         this.$refs.focus[this.userList.length - 1].focus();
       });
+    },
+    choosePage(item) {
+      handle.$emit("choose", item);
     },
     subProject(item) {
       item.show = false;
@@ -140,6 +164,16 @@ export default {
       .list-row-content {
         font-size: 15px;
         margin-left: 10px;
+        flex: 1;
+        text-align: left;
+      }
+      .tips {
+        color: #fff;
+        font-size: 15px;
+        border-radius: 50%;
+        width: 15px;
+        height: 15px;
+        background: #606060;
       }
     }
     .list-row:hover {
