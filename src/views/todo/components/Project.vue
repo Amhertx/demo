@@ -2,17 +2,18 @@
   <div class="box-right">
     <h2 class="title">
       <div>
-        <i class="el-icon-star-off"></i>
-        重要
+        <i class="el-icon-s-home"></i>
+        任务
       </div>
     </h2>
     <div class="body">
-      <div class="loading" v-if="!starList.length">
+      <div class="loading" v-if="!myTodoList.length && !oldList.length">
         <i class="el-icon-sunny logo"></i>
-        <div class="loading-content">尝试为一些任务添加星标，以便在此处查看它们。</div>
+        <div class="loading-title">专注于你的一天</div>
+        <div class="loading-content">使用“我的一天”完成任务，这是一个每天都会刷新的列表。</div>
       </div>
       <ul class="todo-list">
-        <li class="list-li" v-for="(item, index) in starList" :key="index">
+        <li class="list-li" v-for="(item, index) in myTodoList" :key="index">
           <div class="li-div">
             <el-checkbox v-model="item.do" @change="clickCheckbox(item, true)"></el-checkbox>
             <div class="content">
@@ -25,10 +26,34 @@
               size="mini"
               @click="star(item)"
             ></el-button>
-            <el-button class="btn" size="mini" type="danger" @click="del(item)">删除</el-button>
+            <el-button class="btn" size="mini" type="danger" @click="del('n', index)">删除</el-button>
           </div>
         </li>
       </ul>
+      <div class="hr" @click="showOldList = !showOldList" v-show="oldList.length">
+        <i :class="showOldList ? 'el-icon-arrow-down' : 'el-icon-arrow-right'"></i>
+        已完成
+      </div>
+      <transition name="el-zoom-in-top">
+        <ul class="todo-list" v-show="showOldList">
+          <li class="list-li" v-for="(item, index) in oldList" :key="index">
+            <div class="li-div">
+              <el-checkbox v-model="item.do" @change="clickCheckbox(item, false)"></el-checkbox>
+              <div class="content old">
+                {{ item.content }}
+              </div>
+              <el-button
+                :type="item.star ? 'warning' : 'info'"
+                :icon="item.star ? 'el-icon-star-on' : 'el-icon-star-off'"
+                circle
+                size="mini"
+                @click="star(item)"
+              ></el-button>
+              <el-button class="btn" size="mini" type="danger" @click="del('o', index)">删除</el-button>
+            </div>
+          </li>
+        </ul>
+      </transition>
     </div>
     <div class="ctodo">
       <el-tooltip class="item" effect="dark" manual v-model="isTodo" content="还没输入任务呢！" placement="top">
@@ -58,11 +83,21 @@ export default {
       time: "",
       checkList: [],
       isTodo: false,
-      starList: [],
     };
   },
   mounted() {
     const date = new Date();
+    let h = "";
+    let m = "";
+    let s = "";
+    setInterval(() => {
+      h = new Date().getHours();
+      m = new Date().getMinutes();
+      s = new Date().getSeconds();
+      m = String(m);
+      s = String(s);
+      this.time = h + ":" + (m.length < 2 ? "0" + m : m) + ":" + (s.length < 2 ? "0" + s : s);
+    }, 1000);
     this.date =
       date.getMonth() +
       1 +
@@ -87,8 +122,14 @@ export default {
   methods: {
     // 输入任务
     addTodo() {
+      let date = Date.now();
       if (this.form.content) {
-        this.myTodoList.push({ id: this.myTodoList.length, content: this.form.content, do: false, star: true });
+        this.myTodoList.push({
+          id: date,
+          content: this.form.content,
+          do: false,
+          star: false,
+        });
         this.setItem();
       } else {
         this.isTodo = true;
@@ -98,37 +139,26 @@ export default {
       }
       this.form.content = "";
     },
-    del(item) {
-      this.myTodoList.map((res, i) => {
-        if (res.id == item.id) {
-          this.myTodoList.splice(i, 1);
-        }
-      });
+    del(name, index) {
+      if (name == "n") {
+        this.myTodoList.splice(index, 1);
+      } else {
+        this.oldList.splice(index, 1);
+      }
       this.setItem();
     },
     star(item) {
-      this.myTodoList.map((res) => {
-        if (res.id == item.id) {
-          res.star = !res.star;
-        }
-      });
+      item.star = !item.star;
       this.setItem();
     },
     getItem() {
-      const myDay = JSON.parse(window.localStorage.getItem("myDay"));
-      if (myDay) {
-        this.myTodoList = myDay.myTodoList;
-        this.oldList = myDay.oldList;
+      const a = JSON.parse(window.localStorage.getItem("myDay"));
+      if (a) {
+        this.myTodoList = a.myTodoList;
+        this.oldList = a.oldList;
       } else {
         this.myTodoList = [];
         this.oldList = [];
-        this.setItem();
-      }
-      const a = JSON.parse(window.localStorage.getItem("important"));
-      if (a) {
-        this.starList = a.starList;
-      } else {
-        this.starList = [];
         this.setItem();
       }
     },
@@ -143,7 +173,6 @@ export default {
       window.localStorage.setItem("myDay", JSON.stringify(a));
       window.localStorage.setItem("important", JSON.stringify({ starList }));
       handle.$emit("update");
-      this.getItem();
     },
     // 完成任务
     clickCheckbox(item, doIt) {
@@ -177,7 +206,7 @@ export default {
   padding: 50px;
   position: relative;
   .title {
-    color: #ac395d;
+    color: #3063ab;
     font-size: 35px;
     margin-top: 0;
     margin-bottom: 20px;
@@ -186,7 +215,7 @@ export default {
     justify-content: space-between;
   }
   .time {
-    color: #ac395d;
+    color: #3063ab;
     text-align: left;
     margin-bottom: 20px;
   }
@@ -197,7 +226,7 @@ export default {
       cursor: pointer;
       user-select: none;
       background: #f5fafd;
-      color: #ac395d;
+      color: #3063ab;
       width: max-content;
       padding: 5px;
       // margin-left: 20px;
@@ -234,6 +263,10 @@ export default {
             padding: 10px 20px 10px 0;
             line-height: 25px;
           }
+          .old {
+            text-decoration: line-through;
+            color: #909399;
+          }
           .btn {
             height: 30px;
           }
@@ -262,11 +295,17 @@ export default {
           transform: rotate(360deg);
         }
       }
-      .loading-content {
-        font-size: 15px;
-        color: #ac395d;
+      .loading-title {
         margin-top: 10px;
-        width: 250px;
+        font-weight: bold;
+        color: #3063ab;
+        font-size: 20px;
+      }
+      .loading-content {
+        margin-top: 10px;
+        font-size: 15px;
+        color: #4170b2;
+        width: 280px;
       }
     }
   }

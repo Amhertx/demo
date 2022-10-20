@@ -25,7 +25,13 @@
       </div>
     </div>
     <div class="list">
-      <div class="list-row" v-for="(item, index) in list" :key="index" @click="choosePage(item)">
+      <div
+        class="list-row"
+        :class="item.choose ? 'list-row-choose' : ''"
+        v-for="(item, index) in list"
+        :key="index"
+        @click="choosePage(item)"
+      >
         <div :class="item.icon"></div>
         <div class="list-row-content">{{ item.label }}</div>
         <div class="tips" v-show="item.todoInfo">{{ item.todoInfo }}</div>
@@ -61,11 +67,11 @@ export default {
   data() {
     return {
       list: [
-        { label: "我的一天", value: "myDay", icon: "el-icon-sunny", todoInfo: "" },
-        { label: "重要", value: "important", icon: "el-icon-star-off", todoInfo: "" },
-        { label: "计划内", value: "plan", icon: "el-icon-notebook-1", todoInfo: "" },
-        { label: "已分配给我", value: "4", icon: "el-icon-user", todoInfo: "" },
-        { label: "任务", value: "5", icon: "el-icon-s-home", todoInfo: "" },
+        { label: "我的一天", value: "myDay", icon: "el-icon-sunny", todoInfo: "", choose: true },
+        { label: "重要", value: "important", icon: "el-icon-star-off", todoInfo: "", choose: false },
+        { label: "计划内", value: "plan", icon: "el-icon-notebook-1", todoInfo: "", choose: false },
+        { label: "已分配给我", value: "4", icon: "el-icon-user", todoInfo: "", choose: false },
+        { label: "任务", value: "project", icon: "el-icon-s-home", todoInfo: "", choose: false },
       ],
       searchValue: "",
       userInfo: {},
@@ -96,15 +102,28 @@ export default {
       myDay.oldList.map((res) => this.allList.push(res));
     },
     getTips() {
+      let myTodoList = [];
       this.list.map((res) => {
         const a = JSON.parse(window.localStorage.getItem(res.value));
+        let date1 = Date.parse(new Date().toLocaleDateString());
+        let date2 = Date.parse(new Date().toLocaleDateString()) + 24 * 60 * 60 * 1000 - 1;
         if (a) {
           if (res.value == "myDay") {
-            res.todoInfo = a.myTodoList.length + a.oldList.length;
+            let myDay = [];
+            a.myTodoList.map((res) => {
+              myTodoList.push(res);
+              if (res.id >= date1 && res.id <= date2) {
+                myDay.push(res);
+              }
+            });
+            res.todoInfo = myDay.length;
           }
           if (res.value == "important") {
             res.todoInfo = a.starList.length;
           }
+        }
+        if (res.value == "project") {
+          res.todoInfo = myTodoList.length;
         }
       });
     },
@@ -115,6 +134,8 @@ export default {
       });
     },
     choosePage(item) {
+      this.list.map((res) => (res.choose = false));
+      item.choose = true;
       handle.$emit("choose", item);
     },
     subProject(item) {
@@ -198,6 +219,9 @@ export default {
       }
     }
     .list-row:hover {
+      background: #e9e9e9;
+    }
+    .list-row-choose {
       background: #e9e9e9;
     }
   }

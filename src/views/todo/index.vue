@@ -22,7 +22,6 @@ export default {
   },
   mounted() {
     handle.$on("choose", (res) => {
-      console.log(res);
       this.page = res.value;
     });
   },

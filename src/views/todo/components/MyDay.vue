@@ -38,7 +38,7 @@
           <li class="list-li" v-for="(item, index) in oldList" :key="index">
             <div class="li-div">
               <el-checkbox v-model="item.do" @change="clickCheckbox(item, false)"></el-checkbox>
-              <div class="content">
+              <div class="content old">
                 {{ item.content }}
               </div>
               <el-button
@@ -121,8 +121,14 @@ export default {
   methods: {
     // 输入任务
     addTodo() {
+      let date = Date.now();
       if (this.form.content) {
-        this.myTodoList.push({ id: this.myTodoList.length, content: this.form.content, do: false, star: false });
+        this.myTodoList.push({
+          id: date,
+          content: this.form.content,
+          do: false,
+          star: false,
+        });
         this.setItem();
       } else {
         this.isTodo = true;
@@ -145,10 +151,22 @@ export default {
       this.setItem();
     },
     getItem() {
+      this.myTodoList = [];
+      this.oldList = [];
       const a = JSON.parse(window.localStorage.getItem("myDay"));
+      let date1 = Date.parse(new Date().toLocaleDateString());
+      let date2 = Date.parse(new Date().toLocaleDateString()) + 24 * 60 * 60 * 1000 - 1;
       if (a) {
-        this.myTodoList = a.myTodoList;
-        this.oldList = a.oldList;
+        a.myTodoList.map((res) => {
+          if (res.id >= date1 && res.id <= date2) {
+            this.myTodoList.push(res);
+          }
+        });
+        a.oldList.map((res) => {
+          if (res.id >= date1 && res.id <= date2) {
+            this.oldList.push(res);
+          }
+        });
       } else {
         this.myTodoList = [];
         this.oldList = [];
@@ -255,6 +273,10 @@ export default {
             word-break: break-all;
             padding: 10px 20px 10px 0;
             line-height: 25px;
+          }
+          .old {
+            text-decoration: line-through;
+            color: #909399;
           }
           .btn {
             height: 30px;
