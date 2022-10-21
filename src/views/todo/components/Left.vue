@@ -77,6 +77,7 @@ export default {
       userInfo: {},
       userList: [],
       allList: [],
+      time: null,
     };
   },
   mounted() {
@@ -88,12 +89,22 @@ export default {
   methods: {
     search() {
       let searchList = [];
-      this.allList.map((res) => {
-        if (res.content.indexOf(this.searchValue) != -1 && this.searchValue != "") {
-          searchList.push(res);
+      if (this.time != null) {
+        clearTimeout(this.time);
+      }
+      this.time = setTimeout(() => {
+        this.allList.map((res, index) => {
+          if (res.content.indexOf(this.searchValue) != -1 && this.searchValue != "") {
+            searchList.push(res);
+          }
+        });
+        if (this.searchValue != "") {
+          handle.$emit("choose", { value: 0, search: 1, searchList });
+        } else {
+          handle.$emit("choose", { value: 0, search: 0, searchList });
         }
-      });
-      console.log(searchList);
+        window.localStorage.setItem("search", JSON.stringify(searchList));
+      }, 500);
     },
     getAllList() {
       this.allList = [];
