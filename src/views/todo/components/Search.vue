@@ -21,7 +21,7 @@
                 size="mini"
                 @click="star(item)"
               ></el-button>
-              <el-button class="btn" size="mini" type="danger" @click="del('n', index)">删除</el-button>
+              <el-button class="btn" size="mini" type="danger" @click="del('n', item, index)">删除</el-button>
             </div>
           </li>
         </ul>
@@ -44,7 +44,7 @@
                   size="mini"
                   @click="star(item)"
                 ></el-button>
-                <el-button class="btn" size="mini" type="danger" @click="del('o', index)">删除</el-button>
+                <el-button class="btn" size="mini" type="danger" @click="del('o', item, index)">删除</el-button>
               </div>
             </li>
           </ul>
@@ -70,6 +70,7 @@ export default {
       checkList: [],
       isTodo: false,
       show: false,
+      delInfo: {},
     };
   },
   mounted() {
@@ -84,12 +85,13 @@ export default {
     });
   },
   methods: {
-    del(name, index) {
+    del(name, item, index) {
       if (name == "n") {
         this.myTodoList.splice(index, 1);
       } else {
         this.oldList.splice(index, 1);
       }
+      this.delInfo = item;
       this.setItem();
     },
     star(item) {
@@ -139,6 +141,18 @@ export default {
     },
     setItem() {
       let a = this.findItem();
+      if (this.delInfo.id) {
+        a.myTodoList.map((res, index) => {
+          if (res.id == this.delInfo.id) {
+            a.myTodoList.splice(index, 1);
+          }
+        });
+        a.oldList.map((res, index) => {
+          if (res.id == this.delInfo.id) {
+            a.oldList.splice(index, 1);
+          }
+        });
+      }
       let starList = [];
       this.myTodoList.map((res) => {
         if (res.star) {

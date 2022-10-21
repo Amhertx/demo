@@ -62,26 +62,6 @@ export default {
     };
   },
   mounted() {
-    const date = new Date();
-    this.date =
-      date.getMonth() +
-      1 +
-      "月" +
-      date.getDate() +
-      "日，星期" +
-      (date.getDay() == 1
-        ? "一"
-        : date.getDay() == 2
-        ? "二"
-        : date.getDay() == 3
-        ? "三"
-        : date.getDay() == 4
-        ? "四"
-        : date.getDay() == 5
-        ? "五"
-        : date.getDay() == 6
-        ? "六"
-        : "日");
     this.getItem();
   },
   methods: {

@@ -34,7 +34,7 @@
       >
         <div :class="item.icon"></div>
         <div class="list-row-content">{{ item.label }}</div>
-        <div class="tips" v-show="item.todoInfo">{{ item.todoInfo }}</div>
+        <div class="tips" v-show="item.todoInfo">{{ Number(item.todoInfo) > 99 ? "99+" : item.todoInfo }}</div>
       </div>
     </div>
     <hr />
@@ -213,6 +213,7 @@ export default {
       user-select: none;
       display: flex;
       padding: 10px;
+      margin-bottom: 5px;
       align-items: center;
       .list-row-content {
         font-size: 15px;
@@ -222,18 +223,21 @@ export default {
       }
       .tips {
         color: #fff;
-        font-size: 15px;
+        font-size: 10px;
         border-radius: 50%;
-        width: 15px;
-        height: 15px;
+        width: 20px;
+        height: 20px;
+        line-height: 20px;
         background: #606060;
       }
     }
     .list-row:hover {
       background: #e9e9e9;
+      border-radius: 10px;
     }
     .list-row-choose {
       background: #e9e9e9;
+      border-radius: 10px;
     }
   }
   .free-list {

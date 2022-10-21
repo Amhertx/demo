@@ -86,37 +86,6 @@ export default {
     };
   },
   mounted() {
-    const date = new Date();
-    let h = "";
-    let m = "";
-    let s = "";
-    setInterval(() => {
-      h = new Date().getHours();
-      m = new Date().getMinutes();
-      s = new Date().getSeconds();
-      m = String(m);
-      s = String(s);
-      this.time = h + ":" + (m.length < 2 ? "0" + m : m) + ":" + (s.length < 2 ? "0" + s : s);
-    }, 1000);
-    this.date =
-      date.getMonth() +
-      1 +
-      "月" +
-      date.getDate() +
-      "日，星期" +
-      (date.getDay() == 1
-        ? "一"
-        : date.getDay() == 2
-        ? "二"
-        : date.getDay() == 3
-        ? "三"
-        : date.getDay() == 4
-        ? "四"
-        : date.getDay() == 5
-        ? "五"
-        : date.getDay() == 6
-        ? "六"
-        : "日");
     this.getItem();
   },
   methods: {
