@@ -1,0 +1,2 @@
+"use strict";(self["webpackChunktest"]=self["webpackChunktest"]||[]).push([[137],{4137:function(t,n,u){u.r(n),u.d(n,{default:function(){return i}});var e=function(){var t=this,n=t._self._c;return n("div",[t._v("账本")])},l=[],s={},r=s,c=u(1001),f=(0,c.Z)(r,e,l,!1,null,null,null),i=f.exports}}]);
+//# sourceMappingURL=137.31349365.js.map
