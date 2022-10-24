@@ -67,8 +67,9 @@ export default {
   methods: {
     // 输入任务
     addTodo() {
+      let date = Date.now();
       if (this.form.content) {
-        this.myTodoList.push({ id: this.myTodoList.length, content: this.form.content, do: false, star: true });
+        this.myTodoList.push({ id: date, content: this.form.content, do: false, star: true });
         this.setItem();
       } else {
         this.isTodo = true;

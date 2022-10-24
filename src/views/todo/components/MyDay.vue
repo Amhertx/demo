@@ -73,7 +73,9 @@ export default {
   data() {
     return {
       myTodoList: [],
+      hTodoList: [],
       oldList: [],
+      hOldList: [],
       showOldList: true,
       form: {
         content: "",
@@ -153,6 +155,8 @@ export default {
     getItem() {
       this.myTodoList = [];
       this.oldList = [];
+      this.hTodoList = [];
+      this.hOldList = [];
       const a = JSON.parse(window.localStorage.getItem("myDay"));
       let date1 = Date.parse(new Date().toLocaleDateString());
       let date2 = Date.parse(new Date().toLocaleDateString()) + 24 * 60 * 60 * 1000 - 1;
@@ -160,11 +164,15 @@ export default {
         a.myTodoList.map((res) => {
           if (res.id >= date1 && res.id <= date2) {
             this.myTodoList.push(res);
+          } else {
+            this.hTodoList.push(res);
           }
         });
         a.oldList.map((res) => {
           if (res.id >= date1 && res.id <= date2) {
             this.oldList.push(res);
+          } else {
+            this.hOldList.push(res);
           }
         });
       } else {
@@ -174,9 +182,14 @@ export default {
       }
     },
     setItem() {
-      let a = { myTodoList: this.myTodoList, oldList: this.oldList };
+      let myTodoList = JSON.parse(JSON.stringify(this.myTodoList));
+      let oldList = JSON.parse(JSON.stringify(this.oldList));
+      this.hTodoList.map((res) => myTodoList.push(res));
+      this.hOldList.map((res) => oldList.push(res));
+      let a = { myTodoList, oldList };
+      console.log(a);
       let starList = [];
-      this.myTodoList.map((res) => {
+      myTodoList.map((res) => {
         if (res.star) {
           starList.push(res);
         }
