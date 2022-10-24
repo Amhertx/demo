@@ -70,7 +70,7 @@ export default {
         { label: "我的一天", value: "myDay", icon: "el-icon-sunny", todoInfo: "", choose: true },
         { label: "重要", value: "important", icon: "el-icon-star-off", todoInfo: "", choose: false },
         { label: "计划内", value: "plan", icon: "el-icon-notebook-1", todoInfo: "", choose: false },
-        { label: "已分配给我", value: "4", icon: "el-icon-user", todoInfo: "", choose: false },
+        { label: "已分配给我", value: "allocation", icon: "el-icon-user", todoInfo: "", choose: false },
         { label: "任务", value: "project", icon: "el-icon-s-home", todoInfo: "", choose: false },
       ],
       searchValue: "",
