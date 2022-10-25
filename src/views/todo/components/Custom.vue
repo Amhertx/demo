@@ -1,17 +1,13 @@
 <template>
   <div class="box-right">
     <h2 class="title">
-      <div>
-        <i class="el-icon-s-home"></i>
-        任务
-      </div>
+      <div>{{ info.label }}</div>
     </h2>
     <div class="body">
       <div class="loading" v-if="!myTodoList.length && !oldList.length">
-        <!-- <i class="el-icon-sunny logo"></i> -->
-        <!-- <div class="loading-title">专注于你的一天</div> -->
-        <img class="img" src="@/assets/project.png" alt="" />
-        <div class="loading-content">未包含在你所创建的任务列表中的任务会在此处显示。</div>
+        <i class="el-icon-sunny logo"></i>
+        <div class="loading-title">专注于你的一天</div>
+        <div class="loading-content">使用“我的一天”完成任务，这是一个每天都会刷新的列表。</div>
       </div>
       <ul class="todo-list">
         <li class="list-li" v-for="(item, index) in myTodoList" :key="index">
@@ -72,10 +68,15 @@
 <script>
 import handle from "./handle";
 export default {
+  props: {
+    info: Object,
+  },
   data() {
     return {
       myTodoList: [],
+      hTodoList: [],
       oldList: [],
+      hOldList: [],
       showOldList: true,
       form: {
         content: "",
@@ -87,7 +88,7 @@ export default {
     };
   },
   mounted() {
-    this.getItem();
+    // this.getItem();
   },
   methods: {
     // 输入任务
@@ -122,10 +123,29 @@ export default {
       this.setItem();
     },
     getItem() {
-      const a = JSON.parse(window.localStorage.getItem("myDay"));
+      console.log("====", this.info.value);
+      this.myTodoList = [];
+      this.oldList = [];
+      this.hTodoList = [];
+      this.hOldList = [];
+      const a = JSON.parse(window.localStorage.getItem(this.info.value));
+      let date1 = Date.parse(new Date().toLocaleDateString());
+      let date2 = Date.parse(new Date().toLocaleDateString()) + 24 * 60 * 60 * 1000 - 1;
       if (a) {
-        this.myTodoList = a.myTodoList;
-        this.oldList = a.oldList;
+        a.myTodoList.map((res) => {
+          if (res.id >= date1 && res.id <= date2) {
+            this.myTodoList.push(res);
+          } else {
+            this.hTodoList.push(res);
+          }
+        });
+        a.oldList.map((res) => {
+          if (res.id >= date1 && res.id <= date2) {
+            this.oldList.push(res);
+          } else {
+            this.hOldList.push(res);
+          }
+        });
       } else {
         this.myTodoList = [];
         this.oldList = [];
@@ -133,14 +153,18 @@ export default {
       }
     },
     setItem() {
-      let a = { myTodoList: this.myTodoList, oldList: this.oldList };
+      let myTodoList = JSON.parse(JSON.stringify(this.myTodoList));
+      let oldList = JSON.parse(JSON.stringify(this.oldList));
+      this.hTodoList.map((res) => myTodoList.push(res));
+      this.hOldList.map((res) => oldList.push(res));
+      let a = { myTodoList, oldList };
       let starList = [];
-      this.myTodoList.map((res) => {
+      myTodoList.map((res) => {
         if (res.star) {
           starList.push(res);
         }
       });
-      window.localStorage.setItem("myDay", JSON.stringify(a));
+      window.localStorage.setItem(this.info.value, JSON.stringify(a));
       window.localStorage.setItem("important", JSON.stringify({ starList }));
       handle.$emit("update");
     },
@@ -179,7 +203,7 @@ export default {
     color: #3063ab;
     font-size: 35px;
     margin-top: 0;
-    margin-bottom: 20px;
+    margin-bottom: 5px;
     text-align: left;
     display: flex;
     justify-content: space-between;
@@ -252,9 +276,6 @@ export default {
       justify-content: center;
       align-items: center;
       flex-direction: column;
-      .img {
-        width: 15vw;
-      }
       .logo {
         font-size: 150px;
         color: #f7b548;

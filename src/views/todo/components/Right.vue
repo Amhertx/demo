@@ -5,6 +5,7 @@
     <project v-show="title == 'project'" ref="project"></project>
     <search v-show="search"></search>
     <inConstruction v-show="title == 'plan' || title == 'allocation'"></inConstruction>
+    <custom v-show="showC != ''" :info="info" ref="custom"></custom>
   </div>
 </template>
 
@@ -14,6 +15,7 @@ import star from "./Star.vue";
 import project from "./Project.vue";
 import search from "./Search.vue";
 import inConstruction from "./InConstruction.vue";
+import custom from "./Custom.vue";
 import handle from "./handle";
 export default {
   components: {
@@ -22,16 +24,28 @@ export default {
     project,
     search,
     inConstruction,
+    custom,
   },
   data() {
     return {
       title: "myDay",
       search: 0,
       oldTitle: "",
+      showC: "",
+      info: {},
     };
   },
   mounted() {
     handle.$on("choose", (res) => {
+      if (res.value.indexOf("c") == 0) {
+        this.showC = res.value;
+        this.info = res;
+        this.$nextTick(() => {
+          this.$refs.custom.getItem();
+        });
+      } else {
+        this.showC = "";
+      }
       this.search = res.search;
       if (res.search) {
         if (this.title) this.oldTitle = this.title;

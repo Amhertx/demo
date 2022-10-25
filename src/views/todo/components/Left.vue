@@ -39,7 +39,13 @@
     </div>
     <hr />
     <div class="free-list">
-      <div class="free-list-row" v-for="(item, index) in userList" :key="index">
+      <div
+        class="free-list-row"
+        :class="item.choose ? 'list-row-choose' : ''"
+        v-for="(item, index) in userList"
+        :key="index"
+        @click="choosePage(item)"
+      >
         <i class="el-icon-s-order"></i>
         <div class="content" v-show="!item.show">{{ item.label }}</div>
         <el-input
@@ -49,7 +55,7 @@
           @focus="getAll"
           @blur="setName(item)"
           size="small"
-          @keydown.enter.native="subProject(item)"
+          @keydown.enter.native="setName(item)"
           v-show="item.show"
         ></el-input>
       </div>
@@ -85,6 +91,8 @@ export default {
     handle.$on("update", () => {
       this.getTips();
     });
+    this.userList = JSON.parse(window.localStorage.getItem("userList"));
+    if (!this.userList) this.userList = [];
   },
   methods: {
     search() {
@@ -139,14 +147,18 @@ export default {
       });
     },
     add() {
-      this.userList.push({ label: "无标题列表", value: this.userList.length, show: true });
+      let date = Date.now();
+      console.log(this.userList);
+      this.userList.push({ label: "无标题列表", value: "c" + date, show: true, todoInfo: "", choose: false });
       this.$nextTick(() => {
         this.$refs.focus[this.userList.length - 1].focus();
       });
     },
     choosePage(item) {
       this.list.map((res) => (res.choose = false));
+      this.userList.map((res) => (res.choose = false));
       item.choose = true;
+      console.log(this.userList);
       handle.$emit("choose", item);
     },
     subProject(item) {
@@ -158,6 +170,7 @@ export default {
     setName(item) {
       item.show = false;
       if (item.label.trim() == false) item.label = "无标题列表";
+      window.localStorage.setItem("userList", JSON.stringify(this.userList));
     },
   },
 };
@@ -246,7 +259,9 @@ export default {
     .free-list-row {
       display: flex;
       padding: 10px;
+      margin-bottom: 5px;
       align-items: center;
+      cursor: pointer;
       .content {
         margin-left: 10px;
         font-size: 15px;
@@ -254,6 +269,11 @@ export default {
     }
     .free-list-row:hover {
       background: #e9e9e9;
+      border-radius: 10px;
+    }
+    .list-row-choose {
+      background: #e9e9e9;
+      border-radius: 10px;
     }
   } // 滚动条
   .free-list::-webkit-scrollbar {
