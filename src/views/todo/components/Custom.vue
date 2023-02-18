@@ -129,22 +129,14 @@ export default {
       this.hTodoList = [];
       this.hOldList = [];
       const a = JSON.parse(window.localStorage.getItem(this.info.value));
-      let date1 = Date.parse(new Date().toLocaleDateString());
-      let date2 = Date.parse(new Date().toLocaleDateString()) + 24 * 60 * 60 * 1000 - 1;
       if (a) {
         a.myTodoList.map((res) => {
-          if (res.id >= date1 && res.id <= date2) {
-            this.myTodoList.push(res);
-          } else {
-            this.hTodoList.push(res);
-          }
+          this.myTodoList.push(res);
+          this.hTodoList.push(res);
         });
         a.oldList.map((res) => {
-          if (res.id >= date1 && res.id <= date2) {
-            this.oldList.push(res);
-          } else {
-            this.hOldList.push(res);
-          }
+          this.oldList.push(res);
+          this.hOldList.push(res);
         });
       } else {
         this.myTodoList = [];

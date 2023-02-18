@@ -122,7 +122,14 @@ export default {
       this.setItem();
     },
     getItem() {
+      this.myTodoList = [];
+      this.oldList = [];
       const a = JSON.parse(window.localStorage.getItem("myDay"));
+      const userList = JSON.parse(window.localStorage.getItem("userList"));
+      let list = [];
+      userList.map((res) => {
+        if (res.value) list.push(JSON.parse(window.localStorage.getItem(res.value)));
+      });
       if (a) {
         this.myTodoList = a.myTodoList;
         this.oldList = a.oldList;
@@ -131,6 +138,9 @@ export default {
         this.oldList = [];
         this.setItem();
       }
+      list.map((res) => {
+        this.myTodoList.push.apply(this.myTodoList, res.myTodoList);
+      });
     },
     setItem() {
       let a = { myTodoList: this.myTodoList, oldList: this.oldList };

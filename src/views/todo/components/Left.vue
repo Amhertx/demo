@@ -92,7 +92,13 @@ export default {
       this.getTips();
     });
     this.userList = JSON.parse(window.localStorage.getItem("userList"));
-    if (!this.userList) this.userList = [];
+    if (!this.userList.length) {
+      this.userList = [];
+    } else {
+      this.userList.map((res) => {
+        res.choose = false;
+      });
+    }
   },
   methods: {
     search() {
